@@ -9,21 +9,23 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        return inertia('Customers/Index', [
+        return view('customers.index', [
             'customers' => Customer::latest()->get()
         ]);
     }
 
     public function create()
     {
-        return inertia('Customers/Create');
+        return view('customers.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'nullable|email',
+        'name' => 'required|max:255',
+        'email' => 'nullable|email',
+        'phone' => 'nullable|max:20',
+        'company' => 'nullable|max:255',
         ]);
 
         Customer::create($request->all());
@@ -33,7 +35,7 @@ class CustomerController extends Controller
 
     public function edit(Customer $customer)
     {
-        return inertia('Customers/Edit', [
+        return view('customers.edit', [
             'customer' => $customer
         ]);
     }
