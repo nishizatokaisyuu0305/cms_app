@@ -22,6 +22,8 @@
             <th>名前</th>
             <th>Email</th>
             <th>電話番号</th>
+            <th>会社名</th>
+            <th>操作</th>
         </tr>
     </thead>
 
@@ -32,6 +34,27 @@
                 <td>{{ $customer->name }}</td>
                 <td>{{ $customer->email }}</td>
                 <td>{{ $customer->phone }}</td>
+                <td>{{ $customer->company }}</td>
+    
+                <td>
+                    <a href="{{ route('customers.edit', $customer->id) }}">
+                        編集
+                    </a>
+    
+                    <form
+                        action="{{ route('customers.destroy', $customer->id) }}"
+                        method="POST"
+                        style="display:inline;"
+                        onsubmit="return confirm('本当に削除しますか？')"
+                    >
+                        @csrf
+                        @method('DELETE')
+    
+                        <button type="submit">
+                            削除
+                        </button>
+                    </form>
+                </td>
             </tr>
         @endforeach
     </tbody>

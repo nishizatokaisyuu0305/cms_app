@@ -45,6 +45,8 @@ class CustomerController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'nullable|email',
+            'phone' => 'nullable|max:20',
+            'company' => 'nullable|max:255',
         ]);
 
         $customer->update($request->all());
