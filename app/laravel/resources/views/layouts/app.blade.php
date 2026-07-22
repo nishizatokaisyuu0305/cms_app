@@ -1,36 +1,91 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="ja">
+
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'CMS') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite([
+            'resources/css/app.css',
+            'resources/js/app.js'
+        ])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+    <body class="bg-gray-100">
+        <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg">
+            <div class="px-8 py-4 flex justify-between items-center">
+                <h1 class="text-2xl font-bold">
+                    顧客管理システム
+                </h1>
+
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 bg-white text-blue-700 rounded-full flex items-center justify-center font-bold">
+                            {{ mb_substr(Auth::user()->name, 0, 1) }}
+                        </div>
+
+                        <div>
+                            <p class="text-xs text-blue-100">
+                                ログイン中
+                            </p>
+                            <p class="font-semibold">
+                                {{ Auth::user()->name }}
+                            </p>
+                        </div>
                     </div>
-                </header>
-            @endisset
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
+                    <form
+                        action="{{ route('logout') }}"
+                        method="POST"
+                    >
+                        @csrf
+                        <button
+                            type="submit"
+                            class="bg-white text-blue-700 px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+                        >
+                            ログアウト
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </header>
+
+        <div class="flex">
+            <aside class="w-64 bg-white min-h-screen shadow-lg">
+                <div class="p-6 border-b">
+                    <h2 class="text-lg font-bold text-gray-700">
+                        メニュー
+                    </h2>
+                </div>
+
+                <nav class="p-4 space-y-2">
+                    <a
+                        href="{{ route('customers.index') }}"
+                        class="flex items-center px-4 py-3 rounded-lg transition duration-200
+                        {{ request()->routeIs('customers.index')
+                            ? 'bg-blue-600 text-white'
+                            : 'hover:bg-blue-100 hover:text-blue-700' }}"
+                    >
+                        👥 顧客一覧
+                    </a>
+                    <a
+                        href="{{ route('customers.create') }}"
+                        class="flex items-center px-4 py-3 rounded-lg transition duration-200
+                        {{ request()->routeIs('customers.create')
+                            ? 'bg-blue-600 text-white'
+                            : 'hover:bg-blue-100 hover:text-blue-700' }}"
+                    >
+                        ➕ 顧客登録
+                    </a>
+                </nav>
+            </aside>
+            <main class="flex-1 p-8">
+                @yield('content')
             </main>
+
         </div>
     </body>
 </html>

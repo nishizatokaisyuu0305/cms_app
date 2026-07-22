@@ -1,65 +1,142 @@
-<!DOCTYPE html>
+@extends('layouts.app')
 
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>顧客一覧</title>
-</head>
-<body>
+@section('content')
 
-```
-<h1>顧客一覧</h1>
+<div class="max-w-7xl mx-auto">
 
-<a href="{{ route('customers.create') }}">
-    新規登録
-</a>
-
-<table border="1" cellpadding="5">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>名前</th>
-            <th>Email</th>
-            <th>電話番号</th>
-            <th>会社名</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach($customers as $customer)
-            <tr>
-                <td>{{ $customer->id }}</td>
-                <td>{{ $customer->name }}</td>
-                <td>{{ $customer->email }}</td>
-                <td>{{ $customer->phone }}</td>
-                <td>{{ $customer->company }}</td>
+    <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl shadow-lg p-6 mb-6">
+        <p class="text-sm opacity-80">
+            登録顧客数
+        </p>
     
-                <td>
-                    <a href="{{ route('customers.edit', $customer->id) }}">
-                        編集
-                    </a>
+        <p class="text-4xl font-bold mt-2">
+            {{ $customers->count() }} 件
+        </p>
+    </div>
     
-                    <form
-                        action="{{ route('customers.destroy', $customer->id) }}"
-                        method="POST"
-                        style="display:inline;"
-                        onsubmit="return confirm('本当に削除しますか？')"
-                    >
-                        @csrf
-                        @method('DELETE')
+    <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <form
+            action="{{ route('customers.index') }}"
+            method="GET"
+            class="flex items-center gap-3"
+        >
+            <input
+                type="text"
+                name="keyword"
+                value="{{ request('keyword') }}"
+                placeholder="顧客名で検索"
+                class="border rounded px-4 py-2 w-80"
+            >
+            <button
+                type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+                検索
+            </button>
+            <a
+                href="{{ route('customers.index') }}"
+                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+            >
+                クリア
+            </a>
+        </form>
+        
+        <p class="text-sm text-gray-500 mb-4">
+            検索結果：{{ $customers->count() }} 件
+        </p>
+    </div>
     
-                        <button type="submit">
-                            削除
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
-```
 
-</body>
-</html>
+
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">
+                顧客一覧
+            </h2>
+            <p class="text-gray-500">
+                登録済み顧客の確認・編集・削除を行えます
+            </p>
+        </div>
+        <a
+            href="{{ route('customers.create') }}"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+            新規登録
+        </a>
+    </div>
+
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+        <table class="w-full border-collapse">
+            <thead class="bg-blue-600 text-white">
+                <tr>
+                    <th class="border px-4 py-3 text-left">ID</th>
+                    <th class="border px-4 py-3 text-left">名前</th>
+                    <th class="border px-4 py-3 text-left">Email</th>
+                    <th class="border px-4 py-3 text-left">電話番号</th>
+                    <th class="border px-4 py-3 text-left">会社名</th>
+                    <th class="border px-4 py-3 text-left">操作</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @forelse($customers as $customer)
+                    <tr class="hover:bg-blue-50 transition-colors duration-150">
+                        <td class="border px-4 py-3">
+                            {{ $customer->id }}
+                        </td>
+                        <td class="border px-4 py-3">
+                            {{ $customer->name }}
+                        </td>
+                        <td class="border px-4 py-3">
+                            {{ $customer->email }}
+                        </td>
+                        <td class="border px-4 py-3">
+                            {{ $customer->phone }}
+                        </td>
+                        <td class="border px-4 py-3">
+                            {{ $customer->company }}
+                        </td>
+
+                        <td class="border px-4 py-3">
+                            <a
+                                href="{{ route('customers.edit', $customer->id) }}"
+                                class="inline-block bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600"
+                            >
+                                編集
+                            </a>
+
+                            <form
+                                action="{{ route('customers.destroy', $customer->id) }}"
+                                method="POST"
+                                class="inline"
+                                onsubmit="return confirm('本当に削除しますか？')"
+                            >
+                                @csrf
+                                @method('DELETE')
+
+                                <button
+                                    type="submit"
+                                    class="ml-2 bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+                                >
+                                    削除
+                                </button>
+                            </form>
+
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td
+                            colspan="6"
+                            class="text-center py-8 text-gray-500"
+                        >
+                            登録されている顧客はありません
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@endsection

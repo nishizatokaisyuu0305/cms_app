@@ -7,10 +7,24 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    public function index()
+public function index(Request $request)
     {
+        $query = Customer::query();
+    
+        if ($request->filled('keyword')) {
+            $query->where(
+                'name',
+                'like',
+                '%' . $request->keyword . '%'
+            );
+        }
+    
+        $customers = $query
+            ->latest()
+            ->get();
+    
         return view('customers.index', [
-            'customers' => Customer::latest()->get()
+            'customers' => $customers
         ]);
     }
 
@@ -19,19 +33,32 @@ class CustomerController extends Controller
         return view('customers.create');
     }
 
+
+    // レコード取得保存・バリデーション
     public function store(Request $request)
     {
-        $request->validate([
-        'name' => 'required|max:255',
-        'email' => 'nullable|email',
-        'phone' => 'nullable|max:20',
-        'company' => 'nullable|max:255',
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => ['nullable', 'regex:/^[0-9\-]+$/'],
+            'company' => 'nullable|max:255',
+        ],
+        [
+            'name.required' => '名前は必須です',
+            'name.max' => '名前は255文字以内で入力してください',
+            'email.email' => 'メールアドレス形式で入力してください',
+            'email.max' => 'メールアドレスは255文字以内で入力してください',
+            'phone.regex' => '電話番号は数字とハイフンのみ入力できます',
+            'company.max' => '会社名は255文字以内で入力してください',
         ]);
 
-        Customer::create($request->all());
+        Customer::create($validated);
 
-        return redirect()->route('customers.index');
+        return redirect()
+            ->route('customers.index')
+            ->with('success', '顧客を登録しました');
     }
+
 
     public function edit(Customer $customer)
     {
@@ -40,19 +67,32 @@ class CustomerController extends Controller
         ]);
     }
 
+
+    // 更新・バリデーション
     public function update(Request $request, Customer $customer)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'nullable|email',
-            'phone' => 'nullable|max:20',
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => ['nullable', 'regex:/^[0-9\-]+$/'],
             'company' => 'nullable|max:255',
+        ],
+        [
+            'name.required' => '名前は必須です',
+            'name.max' => '名前は255文字以内で入力してください',
+            'email.email' => 'メールアドレス形式で入力してください',
+            'email.max' => 'メールアドレスは255文字以内で入力してください',
+            'phone.regex' => '電話番号は数字とハイフンのみ入力できます',
+            'company.max' => '会社名は255文字以内で入力してください',
         ]);
 
-        $customer->update($request->all());
+        $customer->update($validated);
 
-        return redirect()->route('customers.index');
+        return redirect()
+            ->route('customers.index')
+            ->with('success', '顧客情報を更新しました');
     }
+
 
     public function destroy(Customer $customer)
     {
