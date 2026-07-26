@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-public function index(Request $request)
+    public function index(Request $request)
     {
         $query = Customer::query();
     
@@ -21,9 +21,10 @@ public function index(Request $request)
     
         $customers = $query
             ->latest()
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
-        $totalCustomers = $customers->count();
+        $totalCustomers = $query->count();
         $totalCompanies = $customers
             ->whereNotNull('company')
             ->where('company', '!=', '')
@@ -37,6 +38,7 @@ public function index(Request $request)
             'totalCompanies' => $totalCompanies,
         ]);
     }
+
 
     public function create()
     {

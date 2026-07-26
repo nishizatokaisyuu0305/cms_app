@@ -74,12 +74,14 @@
                 登録済み顧客の確認・編集・削除を行えます
             </p>
         </div>
+        @role('admin')
         <a
             href="{{ route('customers.create') }}"
             class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
             新規登録
         </a>
+        @endrole
     </div>
 
     <div class="bg-white shadow rounded-lg overflow-hidden">
@@ -115,13 +117,16 @@
                         </td>
 
                         <td class="border px-4 py-3">
+                            @role('admin')
                             <a
                                 href="{{ route('customers.edit', $customer->id) }}"
                                 class="inline-block bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600"
                             >
                                 編集
                             </a>
+                            @endrole
 
+                            @role('admin')
                             <form
                                 action="{{ route('customers.destroy', $customer->id) }}"
                                 method="POST"
@@ -138,6 +143,7 @@
                                     削除
                                 </button>
                             </form>
+                            @endrole
 
                         </td>
                     </tr>
@@ -153,6 +159,10 @@
                 @endforelse
             </tbody>
         </table>
+        
+        <div class="p-4">
+            {{ $customers->links() }}
+        </div>
     </div>
 </div>
 

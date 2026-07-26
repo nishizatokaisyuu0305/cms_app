@@ -70,6 +70,7 @@
                     >
                         👥 顧客一覧
                     </a>
+                    @role('admin')
                     <a
                         href="{{ route('customers.create') }}"
                         class="flex items-center px-4 py-3 rounded-lg transition duration-200
@@ -79,6 +80,7 @@
                     >
                         ➕ 顧客登録
                     </a>
+                    @endrole
                 </nav>
             </aside>
             <main class="flex-1 p-8">
