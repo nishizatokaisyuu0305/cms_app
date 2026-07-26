@@ -3,15 +3,34 @@
 @section('content')
 
 <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white rounded-xl shadow p-6">
+            <p class="text-gray-500 text-sm">
+                登録顧客数
+            </p>
 
-    <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl shadow-lg p-6 mb-6">
-        <p class="text-sm opacity-80">
-            登録顧客数
-        </p>
-    
-        <p class="text-4xl font-bold mt-2">
-            {{ $customers->count() }} 件
-        </p>
+            <h2 class="text-4xl font-bold text-blue-600 mt-2">
+                {{ $totalCustomers }}
+            </h2>
+
+            <p class="text-gray-400 mt-1">
+                Customers
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6">
+            <p class="text-gray-500 text-sm">
+                登録会社数
+            </p>
+
+            <h2 class="text-4xl font-bold text-green-600 mt-2">
+                {{ $totalCompanies }}
+            </h2>
+
+            <p class="text-gray-400 mt-1">
+                Companies
+            </p>
+        </div>
     </div>
     
     <div class="bg-white rounded-lg shadow p-4 mb-6">
@@ -45,8 +64,6 @@
             検索結果：{{ $customers->count() }} 件
         </p>
     </div>
-    
-
 
     <div class="flex justify-between items-center mb-6">
         <div>

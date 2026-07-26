@@ -20,37 +20,36 @@
                     顧客管理システム
                 </h1>
 
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-2">
-                        <div class="w-10 h-10 bg-white text-blue-700 rounded-full flex items-center justify-center font-bold">
-                            {{ mb_substr(Auth::user()->name, 0, 1) }}
+                <div class="flex items-center">
+                    <div class="bg-white text-gray-700 rounded-xl shadow-md px-5 py-3 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white text-xl font-bold">
+                            {{ strtoupper(substr(Auth::user()->name,0,1)) }}
                         </div>
 
                         <div>
-                            <p class="text-xs text-blue-100">
-                                ログイン中
-                            </p>
                             <p class="font-semibold">
                                 {{ Auth::user()->name }}
                             </p>
+
+                            <p class="text-xs text-gray-500">
+                                Administrator
+                            </p>
                         </div>
-                    </div>
 
-                    <form
-                        action="{{ route('logout') }}"
-                        method="POST"
-                    >
-                        @csrf
-                        <button
-                            type="submit"
-                            class="bg-white text-blue-700 px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+                        <form
+                            action="{{ route('logout') }}"
+                            method="POST"
                         >
-                            ログアウト
-                        </button>
-                    </form>
+                            @csrf
+                            <button
+                                type="submit"
+                                class="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                            >
+                                ログアウト
+                            </button>
+                        </form>
+                    </div>
                 </div>
-
-            </div>
         </header>
 
         <div class="flex">

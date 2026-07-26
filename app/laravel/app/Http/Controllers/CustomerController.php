@@ -22,9 +22,19 @@ public function index(Request $request)
         $customers = $query
             ->latest()
             ->get();
+
+        $totalCustomers = $customers->count();
+        $totalCompanies = $customers
+            ->whereNotNull('company')
+            ->where('company', '!=', '')
+            ->pluck('company')
+            ->unique()
+            ->count();
     
         return view('customers.index', [
-            'customers' => $customers
+            'customers' => $customers,
+            'totalCustomers' => $totalCustomers,
+            'totalCompanies' => $totalCompanies,
         ]);
     }
 
