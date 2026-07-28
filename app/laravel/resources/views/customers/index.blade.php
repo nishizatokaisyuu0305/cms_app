@@ -85,66 +85,74 @@
     </div>
 
     <div class="bg-white shadow rounded-lg overflow-hidden">
-        <table class="w-full border-collapse">
+        <table class="w-full table-fixed border-collapse">
             <thead class="bg-blue-600 text-white">
                 <tr>
-                    <th class="border px-4 py-3 text-left">ID</th>
-                    <th class="border px-4 py-3 text-left">名前</th>
-                    <th class="border px-4 py-3 text-left">Email</th>
-                    <th class="border px-4 py-3 text-left">電話番号</th>
-                    <th class="border px-4 py-3 text-left">会社名</th>
-                    <th class="border px-4 py-3 text-left">操作</th>
+                    <th class="border px-4 py-3 w-16">ID</th>
+                    <th class="border px-4 py-3 w-40">名前</th>
+                    <th class="border px-4 py-3">Email</th>
+                    <th class="border px-4 py-3 w-40">電話番号</th>
+                    <th class="border px-4 py-3 w-40">会社名</th>
+                    <th class="border px-4 py-3 w-48 text-center">操作</th>
                 </tr>
             </thead>
 
             <tbody>
                 @forelse($customers as $customer)
                     <tr class="hover:bg-blue-50 transition-colors duration-150">
-                        <td class="border px-4 py-3">
+                        <td class="border px-3 py-2">
                             {{ $customer->id }}
                         </td>
-                        <td class="border px-4 py-3">
+                        <td class="border px-3 py-2">
                             {{ $customer->name }}
                         </td>
-                        <td class="border px-4 py-3">
+                        <td class="border px-3 py-2">
                             {{ $customer->email }}
                         </td>
-                        <td class="border px-4 py-3">
+                        <td class="border px-3 py-2">
                             {{ $customer->phone }}
                         </td>
-                        <td class="border px-4 py-3">
+                        <td class="border px-3 py-2">
                             {{ $customer->company }}
                         </td>
 
-                        <td class="border px-4 py-3">
-                            @role('admin')
-                            <a
-                                href="{{ route('customers.edit', $customer->id) }}"
-                                class="inline-block bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600"
-                            >
-                                編集
-                            </a>
-                            @endrole
-
-                            @role('admin')
-                            <form
-                                action="{{ route('customers.destroy', $customer->id) }}"
-                                method="POST"
-                                class="inline"
-                                onsubmit="return confirm('本当に削除しますか？')"
-                            >
-                                @csrf
-                                @method('DELETE')
-
+                        <td class="border px-3 py-2">
+                            <div class="flex justify-center items-center gap-1">
                                 <button
-                                    type="submit"
-                                    class="ml-2 bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+                                    type="button"
+                                    onclick="openModal()"
+                                    class="inline-block bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 whitespace-nowrap"
                                 >
-                                    削除
+                                    詳細
                                 </button>
-                            </form>
-                            @endrole
 
+                                @role('admin')
+                                <a
+                                    href="{{ route('customers.edit', $customer->id) }}"
+                                    class="inline-block bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 whitespace-nowrap"
+                                >
+                                    編集
+                                </a>
+                                @endrole
+
+                                @role('admin')
+                                <form
+                                    action="{{ route('customers.destroy', $customer->id) }}"
+                                    method="POST"
+                                    class="inline"
+                                    onsubmit="return confirm('本当に削除しますか？')"
+                                >
+                                    @csrf
+                                    @method('DELETE')
+                                    <button
+                                        type="submit"
+                                        class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 whitespace-nowrap"
+                                    >
+                                        削除
+                                    </button>
+                                </form>
+                                @endrole
+                            </div>
                         </td>
                     </tr>
                 @empty
@@ -165,5 +173,81 @@
         </div>
     </div>
 </div>
+
+<!-- 顧客詳細モーダル -->
+<div
+    id="customerModal"
+    class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
+>
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+
+        <!-- ヘッダー -->
+        <div class="bg-blue-600 text-white px-4 py-3 rounded-t-lg">
+            <h2 class="text-lg font-semibold">
+                顧客詳細
+            </h2>
+        </div>
+
+        <!-- 本文 -->
+        <div class="p-4 space-y-3 text-sm">
+            <div class="grid grid-cols-[90px_1fr] gap-2">
+                <span class="font-semibold text-gray-600">名前</span>
+                <span>ここに名前を表示</span>
+            </div>
+            <div class="grid grid-cols-[90px_1fr] gap-2">
+                <span class="font-semibold text-gray-600">Email</span>
+                <span>ここにEmailを表示</span>
+            </div>
+            
+            <div class="grid grid-cols-[90px_1fr] gap-2">
+                <span class="font-semibold text-gray-600">電話番号</span>
+                <span>ここに電話番号を表示</span>
+            </div>
+            
+            <div class="grid grid-cols-[90px_1fr] gap-2">
+                <span class="font-semibold text-gray-600">会社名</span>
+                <span>ここに会社名を表示</span>
+            </div>
+        </div>
+
+        <!-- フッター -->
+        <div class="px-4 py-3 border-t flex justify-end">
+
+            <button
+                type="button"
+                onclick="closeModal()"
+                class="bg-gray-500 text-white px-3 py-1.5 rounded text-sm hover:bg-gray-600"
+            >
+                閉じる
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+function openModal() {
+
+    document
+        .getElementById('customerModal')
+        .classList.remove('hidden');
+
+    document
+        .getElementById('customerModal')
+        .classList.add('flex');
+}
+
+function closeModal() {
+
+    document
+        .getElementById('customerModal')
+        .classList.remove('flex');
+
+    document
+        .getElementById('customerModal')
+        .classList.add('hidden');
+}
+</script>
 
 @endsection
