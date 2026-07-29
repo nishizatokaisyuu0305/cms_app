@@ -36,6 +36,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])
         ->middleware('role:admin')
         ->name('customers.destroy');
+
+    Route::get('/customers/statistics', [CustomerController::class, 'statistics'])
+        ->name('customers.statistics');
+        
 });
 
 require __DIR__.'/auth.php';

@@ -70,6 +70,7 @@
                     >
                         👥 顧客一覧
                     </a>
+
                     @role('admin')
                     <a
                         href="{{ route('customers.create') }}"
@@ -79,6 +80,18 @@
                             : 'hover:bg-blue-100 hover:text-blue-700' }}"
                     >
                         ➕ 顧客登録
+                    </a>
+                    @endrole
+
+                    @role('admin')
+                    <a
+                        href="{{ route('customers.statistics') }}"
+                        class="flex items-center px-4 py-3 rounded-lg transition duration-200
+                        {{ request()->routeIs('customers.create')
+                            ? 'bg-blue-600 text-white'
+                            : 'hover:bg-blue-100 hover:text-blue-700' }}"
+                    >
+                        📈 顧客統計
                     </a>
                     @endrole
                 </nav>

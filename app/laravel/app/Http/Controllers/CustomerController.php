@@ -112,4 +112,28 @@ class CustomerController extends Controller
 
         return redirect()->route('customers.index');
     }
+
+    public function statistics()
+    {
+        $totalCustomers = Customer::count();
+    
+        $totalCompanies = Customer::whereNotNull('company')
+            ->where('company', '!=', '')
+            ->distinct()
+            ->count('company');
+    
+        $companyRanking = Customer::select('company')
+            ->selectRaw('COUNT(*) as total')
+            ->whereNotNull('company')
+            ->where('company', '!=', '')
+            ->groupBy('company')
+            ->orderByDesc('total')
+            ->get();
+    
+        return view('customers.statistics', compact(
+            'totalCustomers',
+            'totalCompanies',
+            'companyRanking'
+        ));
+    }
 }
