@@ -87,7 +87,7 @@
                     <a
                         href="{{ route('customers.statistics') }}"
                         class="flex items-center px-4 py-3 rounded-lg transition duration-200
-                        {{ request()->routeIs('customers.create')
+                        {{ request()->routeIs('customers.statistics')
                             ? 'bg-blue-600 text-white'
                             : 'hover:bg-blue-100 hover:text-blue-700' }}"
                     >

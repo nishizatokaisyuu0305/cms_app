@@ -120,7 +120,13 @@
                             <div class="flex justify-center items-center gap-1">
                                 <button
                                     type="button"
-                                    onclick="openModal()"
+                                    onclick="openModal(
+                                        @js($customer->name),
+                                        @js($customer->email),
+                                        @js($customer->phone),
+                                        @js($customer->company),
+                                        @js($customer->memo)
+                                    )"
                                     class="inline-block bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 whitespace-nowrap"
                                 >
                                     詳細
@@ -179,7 +185,7 @@
     id="customerModal"
     class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
 >
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl">
 
         <!-- ヘッダー -->
         <div class="bg-blue-600 text-white px-4 py-3 rounded-t-lg">
@@ -192,22 +198,31 @@
         <div class="p-4 space-y-3 text-sm">
             <div class="grid grid-cols-[90px_1fr] gap-2">
                 <span class="font-semibold text-gray-600">名前</span>
-                <span>ここに名前を表示</span>
+                <span id="modalName"></span>
             </div>
+
             <div class="grid grid-cols-[90px_1fr] gap-2">
                 <span class="font-semibold text-gray-600">Email</span>
-                <span>ここにEmailを表示</span>
+                <span id="modalEmail"></span>
             </div>
-            
+
             <div class="grid grid-cols-[90px_1fr] gap-2">
                 <span class="font-semibold text-gray-600">電話番号</span>
-                <span>ここに電話番号を表示</span>
+                <span id="modalPhone"></span>
             </div>
-            
+
             <div class="grid grid-cols-[90px_1fr] gap-2">
                 <span class="font-semibold text-gray-600">会社名</span>
-                <span>ここに会社名を表示</span>
+                <span id="modalCompany"></span>
             </div>
+
+            <div class="grid grid-cols-[90px_1fr] gap-2 items-start">
+                <span class="font-semibold text-gray-600">備考</span>
+                <span
+                    id="modalMemo"
+                    class="whitespace-pre-wrap break-words"
+                ></span>
+            </div>     
         </div>
 
         <!-- フッター -->
@@ -227,15 +242,17 @@
 </div>
 
 <script>
-function openModal() {
+function openModal(name, email, phone, company, memo) {
+    document.getElementById('modalName').textContent = name;
+    document.getElementById('modalEmail').textContent = email;
+    document.getElementById('modalPhone').textContent = phone;
+    document.getElementById('modalCompany').textContent = company;
+    document.getElementById('modalMemo').textContent = memo ?? '';
 
-    document
-        .getElementById('customerModal')
-        .classList.remove('hidden');
+    const customerModal = document.getElementById('customerModal');
 
-    document
-        .getElementById('customerModal')
-        .classList.add('flex');
+    customerModal.classList.remove('hidden');
+    customerModal.classList.add('flex');
 }
 
 function closeModal() {

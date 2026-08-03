@@ -19,7 +19,7 @@
             href="{{ route('customers.index') }}"
             class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
         >
-            顧客一覧へ戻る
+            一覧へ戻る
         </a>
     </div>
 
@@ -60,6 +60,7 @@
             統計情報
         </h3>
 
+        <!-- 会社別登録ランキング -->
         <div class="bg-white rounded-xl shadow overflow-hidden">
             <div class="bg-blue-600 px-6 py-4">
                 <h3 class="text-lg font-semibold text-white">
@@ -115,6 +116,144 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- 月別登録数 -->
+        <div class="bg-white rounded-xl shadow overflow-hidden mt-6">
+            <div class="bg-blue-600 px-6 py-4">
+                <h3 class="text-lg font-semibold text-white">
+                    月別登録数
+                </h3>
+            </div>
+
+            <table class="w-full table-fixed border-collapse">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="w-64 border px-4 py-3 text-left">
+                            登録月
+                        </th>
+
+                        <th class="w-40 border px-4 py-3 text-center">
+                            登録人数
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse($monthlyCustomers as $month)
+                        <tr class="hover:bg-green-50 transition-colors duration-150">
+                            <td class="border px-4 py-3">
+                                {{ \Carbon\Carbon::createFromFormat('Y-m', $month->month)->format('Y年m月') }}
+                            </td>
+
+                            <td class="border px-4 py-3 text-center font-semibold text-green-600">
+                                {{ $month->total }} 人
+                            </td>
+                        </tr>
+
+                    @empty
+                        <tr>
+                            <td colspan="2" class="border px-4 py-8 text-center text-gray-500">
+                                データがありません
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- 会社別割合（円グラフ） -->
+        <div class="bg-white rounded-xl shadow overflow-hidden mt-6">
+
+            <!-- ヘッダー -->
+            <div class="bg-purple-600 px-6 py-4">
+                <h3 class="text-lg font-semibold text-white">
+                    会社別割合
+                </h3>
+            </div>
+
+            <!-- グラフ表示エリア -->
+            <div class="p-6">
+                <div class="w-full flex justify-center">
+                    <div class="w-80 h-80">
+                        <canvas id="companyChart"></canvas>
+                    </div>
+                </div>
+
+                <p class="text-center text-gray-500 text-sm mt-4">
+                    登録顧客の会社別割合
+                </p>
+            </div>
+        </div>
+
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const companyLabels = @json($companyRanking->pluck('company'));
+            const companyData = @json($companyRanking->pluck('total'));
+
+            const ctx = document.getElementById('companyChart');
+
+            new Chart(ctx, {
+                type: 'pie',
+
+                data: {
+                    labels: companyLabels,
+
+                    datasets: [{
+                        label: '登録人数',
+                        data: companyData,
+                        backgroundColor: [
+                            '#3B82F6',
+                            '#10B981',
+                            '#F59E0B',
+                            '#EF4444',
+                            '#8B5CF6',
+                            '#06B6D4',
+                            '#EC4899',
+                            '#84CC16',
+                            '#F97316',
+                            '#6B7280'
+                        ],
+
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+
+                                    const total = context.dataset.data.reduce(
+                                        (sum, value) => sum + value,
+                                        0
+                                    );
+
+                                    const value = context.raw;
+                                    const percent = (value / total * 100).toFixed(1);
+
+                                    return context.label + '：' +
+                                        value + '人 (' +
+                                        percent + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        </script>   
     </div>
 </div>
 @endsection

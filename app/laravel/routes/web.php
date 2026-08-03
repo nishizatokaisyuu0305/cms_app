@@ -39,6 +39,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/customers/statistics', [CustomerController::class, 'statistics'])
         ->name('customers.statistics');
+    
+    Route::get('/customers/delete-complete',[CustomerController::class, 'deleteComplete'])       
+        ->name('customers.deleteComplete');
         
 });
 

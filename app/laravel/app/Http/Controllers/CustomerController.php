@@ -21,7 +21,7 @@ class CustomerController extends Controller
     
         $customers = $query
             ->latest()
-            ->paginate(10)
+            ->paginate(5)
             ->withQueryString();
 
         $totalCustomers = $query->count();
@@ -54,6 +54,7 @@ class CustomerController extends Controller
             'email' => 'nullable|email|max:255',
             'phone' => ['nullable', 'regex:/^[0-9\-]+$/'],
             'company' => 'nullable|max:255',
+            'memo' => 'nullable|max:1000',
         ],
         [
             'name.required' => '名前は必須です',
@@ -62,6 +63,7 @@ class CustomerController extends Controller
             'email.max' => 'メールアドレスは255文字以内で入力してください',
             'phone.regex' => '電話番号は数字とハイフンのみ入力できます',
             'company.max' => '会社名は255文字以内で入力してください',
+            'memo.max' => '備考は1000文字以内で入力してください',
         ]);
 
         Customer::create($validated);
@@ -88,6 +90,7 @@ class CustomerController extends Controller
             'email' => 'nullable|email|max:255',
             'phone' => ['nullable', 'regex:/^[0-9\-]+$/'],
             'company' => 'nullable|max:255',
+            'memo' => 'nullable|max:1000',
         ],
         [
             'name.required' => '名前は必須です',
@@ -96,6 +99,7 @@ class CustomerController extends Controller
             'email.max' => 'メールアドレスは255文字以内で入力してください',
             'phone.regex' => '電話番号は数字とハイフンのみ入力できます',
             'company.max' => '会社名は255文字以内で入力してください',
+            'memo.max' => '備考は1000文字以内で入力してください',
         ]);
 
         $customer->update($validated);
@@ -110,8 +114,15 @@ class CustomerController extends Controller
     {
         $customer->delete();
 
-        return redirect()->route('customers.index');
+        return redirect()->route('customers.deleteComplete');
     }
+
+
+    public function deleteComplete()
+    {
+        return view('customers.delete-complete');
+    }
+    
 
     public function statistics()
     {
@@ -129,11 +140,20 @@ class CustomerController extends Controller
             ->groupBy('company')
             ->orderByDesc('total')
             ->get();
+
+        $monthlyCustomers = Customer::selectRaw(
+            'DATE_FORMAT(created_at, "%Y-%m") as month,
+            COUNT(*) as total'
+        )
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
     
         return view('customers.statistics', compact(
             'totalCustomers',
             'totalCompanies',
-            'companyRanking'
+            'companyRanking',
+            'monthlyCustomers'
         ));
     }
 }
