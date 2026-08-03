@@ -97,9 +97,18 @@
                 </nav>
             </aside>
             <main class="flex-1 p-8">
+                @if(session('success'))
+                    <div
+                        class="mb-6 flex items-center gap-3 bg-green-100 border border-green-400 text-green-700 px-5 py-4 rounded-lg shadow"
+                    >
+                        <span class="text-xl">
+                            ✅
+                        </span>
+                        {{ session('success') }}
+                    </div>
+                @endif
                 @yield('content')
             </main>
-
         </div>
     </body>
 </html>
