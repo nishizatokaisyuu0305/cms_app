@@ -61,25 +61,23 @@ laravel-app
 
 ### テーブル名
 
-+-----------------------+
-| Tables_in_cms_app     |
-+-----------------------+
-| cache                 |
-| cache_locks           |
-| customers             |
-| failed_jobs           |
-| job_batches           |
-| jobs                  |
-| migrations            |
+| テーブル名 |
+|------------|
+| cache |
+| cache_locks |
+| customers |
+| failed_jobs |
+| job_batches |
+| jobs |
+| migrations |
 | model_has_permissions |
-| model_has_roles       |
+| model_has_roles |
 | password_reset_tokens |
-| permissions           |
-| role_has_permissions  |
-| roles                 |
-| sessions              |
-| users                 |
-+-----------------------+
+| permissions |
+| role_has_permissions |
+| roles |
+| sessions |
+| users |
 
 ### カラム
 
