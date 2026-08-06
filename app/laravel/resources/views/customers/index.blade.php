@@ -2,14 +2,14 @@
 
 @section('content')
 
-<div class="max-w-7xl mx-auto">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div class="bg-white rounded-xl shadow p-6">
             <p class="text-gray-500 text-sm">
                 登録顧客数
             </p>
 
-            <h2 class="text-4xl font-bold text-blue-600 mt-2">
+            <h2 class="text-3xl sm:text-4xl font-bold text-blue-600 mt-2">
                 {{ $totalCustomers }}
             </h2>
 
@@ -23,7 +23,7 @@
                 登録会社数
             </p>
 
-            <h2 class="text-4xl font-bold text-green-600 mt-2">
+            <h2 class="text-3xl sm:text-4xl font-bold text-green-600 mt-2">
                 {{ $totalCompanies }}
             </h2>
 
@@ -37,24 +37,24 @@
         <form
             action="{{ route('customers.index') }}"
             method="GET"
-            class="flex items-center gap-3"
+            class="flex flex-col sm:flex-row sm:items-center gap-3"
         >
             <input
                 type="text"
                 name="keyword"
                 value="{{ request('keyword') }}"
                 placeholder="顧客名で検索"
-                class="border rounded px-4 py-2 w-80"
+                class="border rounded px-4 py-2 w-full sm:w-80"
             >
             <button
                 type="submit"
-                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto"
             >
                 検索
             </button>
             <a
                 href="{{ route('customers.index') }}"
-                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 w-full sm:w-auto text-center"
             >
                 クリア
             </a>
@@ -65,9 +65,9 @@
         </p>
     </div>
 
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-left gap-4 mb-6">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-800">
                 顧客一覧
             </h2>
             <p class="text-gray-500">
@@ -77,15 +77,15 @@
         @role('admin')
         <a
             href="{{ route('customers.create') }}"
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto text-center"
         >
             新規登録
         </a>
         @endrole
     </div>
 
-    <div class="bg-white shadow rounded-lg overflow-hidden">
-        <table class="w-full table-fixed border-collapse">
+    <div class="bg-white shadow rounded-lg overflow-x-auto">
+        <table class="min-w-[900px] w-full table-fixed border-collapse">
             <thead class="bg-blue-600 text-white">
                 <tr>
                     <th class="border px-4 py-3 w-16">ID</th>
@@ -117,7 +117,7 @@
                         </td>
 
                         <td class="border px-3 py-2">
-                            <div class="flex justify-center items-center gap-1">
+                            <div class="flex flex-wrap justify-center items-center gap-2">
                                 <button
                                     type="button"
                                     onclick="openModal(
@@ -183,9 +183,12 @@
 <!-- 顧客詳細モーダル -->
 <div
     id="customerModal"
-    class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
+    class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4"
 >
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+    <div 
+        class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        onclick="event.stopPropagation()"
+    >
 
         <!-- ヘッダー -->
         <div class="bg-blue-600 text-white px-4 py-3 rounded-t-lg">
@@ -235,14 +238,13 @@
             >
                 閉じる
             </button>
-
         </div>
-
     </div>
 </div>
 
 <script>
 function openModal(name, email, phone, company, memo) {
+
     document.getElementById('modalName').textContent = name;
     document.getElementById('modalEmail').textContent = email;
     document.getElementById('modalPhone').textContent = phone;
@@ -257,14 +259,23 @@ function openModal(name, email, phone, company, memo) {
 
 function closeModal() {
 
-    document
-        .getElementById('customerModal')
-        .classList.remove('flex');
-
-    document
-        .getElementById('customerModal')
-        .classList.add('hidden');
+    const customerModal = document.getElementById('customerModal');
+    customerModal.classList.remove('flex');
+    customerModal.classList.add('hidden');
 }
+
+// モーダル外クリックで閉じる
+document.getElementById('customerModal').addEventListener('click', function () {
+    closeModal();
+});
+
+// Escキーで閉じる
+document.addEventListener('keydown', function (event) {
+
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
 </script>
 
 @endsection
